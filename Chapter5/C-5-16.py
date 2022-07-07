@@ -1,4 +1,4 @@
-# Consider an implementation of a dynamic array, but instead of copying the elements into an array of double the size (that is, from N to 2N) when its capacity is reached, we copy the elements into an array with [N/4] additional cells, going from capacity N to capacity N + [N/4]. Prove that performing a sequence of n append operations still runs in O(n) time in this case.
+# Implement a pop method for the DynamicArray class, given in Code Fragment 5.3, that removes the last element of the array, and that shrinks the capacity, N, of the array by half any time the number of elements in the array goes below N/4.
 
 import ctypes
 
@@ -24,12 +24,22 @@ class DynamicArray:
         else:
             raise IndexError('invalid index')
 
-    def _append(self, obj):
+    def append(self, obj):
         "Add object to end of the array."
         if self._n == self._capacity:           # not enough room
-            self._resize(1.25 * self._capacity)    # so double capacity
+            self._resize(2 * self._capacity)    # so double capacity
         self._A[self._n] = obj
         self._n += 1
+
+    def pop(self):
+        "Remove the last element of the array."
+        if self._n < (self._capacity / 4):
+            self._resize(self._capacity / 2)
+        C = self._make_array(self._capacity / 2)
+        for k in range(self._n-1):
+            C[k] = self._A[k]
+        self._A = C
+        self._n -= 1
 
     def _resize(self,c):                        # nonpublic utility
         "Resize internal array to capacity c."
