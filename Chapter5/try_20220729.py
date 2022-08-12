@@ -1,5 +1,4 @@
 import itertools
-import numpy as np
 
 def zip(*args, fillvalue=None):
     # zip_longest('ABCD', 'xy', fillvalue='-') --> Ax By C- D-
@@ -36,5 +35,4 @@ def get_allele(a,b):
 	return allele
 
 if __name__ in "__main__":
-    a = [i for i in range(20)]
-    print(a[-1])
+    
