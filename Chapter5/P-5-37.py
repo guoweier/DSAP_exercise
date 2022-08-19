@@ -1,12 +1,19 @@
-# Redesign the CaesarCipher class as a subclass of the SubstitutionCipher from the previous problem.
+# Design a RandomCipher class as a subclass of the SubstitutionCipher from Exercise P-5.35, so that each instance of the class relies on a random permutation of letters for its mapping.
+
 import string
+import random
 
 class SubstitutionCipher:
 
-    def __init__(self,str):
+    def __init__(self):
         "Construct cipher with an arbitrary 26 uppercase letters string."
         alphabet = string.ascii_uppercase
-        encoder = list(str)
+        str = list(alphabet)
+        random.shuffle(str)
+        strr = ""
+        for i in range(26):
+            strr += str[i]
+        encoder = list(strr)
         decoder = [None]*26
         for k in range(26):
             decoder[k] = alphabet[encoder.index(alphabet[k])]
@@ -30,24 +37,9 @@ class SubstitutionCipher:
                 msg[k] = code[j]
         return ''.join(msg)
 
-class CaesarCipher(SubstitutionCipher):
-
-    def __init__(self,str,shift):
-        super().__init__(str) # initialize class base
-        self._shift = shift
-
-    def Caesar(self):
-        "Caesar cipher."
-        self._forward = str
-        decoder = [None]*26
-        for k in range(26):
-            decoder[k] = chr((k - self._shift) % 26 + ord("A"))
-        self._backward = ''.join(decoder)
 
 if __name__ in "__main__":
-    str = "DBCOEFGJIHKLXNAQPRSTUVWZYM"
-    strr = str[::-1]
-    cipher = CaesarCipher(strr,3)
+    cipher = SubstitutionCipher()
     message = "BAIBEY IS MY LOVELY ADORABLE LITTLE CAT."
     coded = cipher.encrypt(message)
     print("Secret: ", coded)
