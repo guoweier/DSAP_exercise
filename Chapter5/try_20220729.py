@@ -35,4 +35,4 @@ def get_allele(a,b):
 	return allele
 
 if __name__ in "__main__":
-    
+    print(int(round(3.45,0)))
