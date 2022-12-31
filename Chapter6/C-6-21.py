@@ -30,3 +30,48 @@ if __name__ in "__main__":
     result = list(getsubset(iter))
     for item in result:
         print(list(item))
+
+
+# combinations('ABCD',r=3)
+# pool = ('A','B','C','D')
+# n = 4
+# indices = [0,1,2]
+# yield ('A','B','C','D')
+# while True:
+# for i in [2,1,0]:
+# if indices[2] (=2) != 2+4-3 = 3 (True)
+# break
+# i = 2
+# indices[2] = indices[2]+1 = 2+1 = 3 (indices = [0,1,3])
+# for j in range(3,3):
+# NA
+# yield ('A','B','D')
+
+# for i in [2,1,0]:
+# if indices[2] (=3) != 2+4-3 = 3 (False)
+# if indices[1] (=1) != 1+4-3 = 2 (True)
+# break
+# i = 1
+# indices[1] = indices[1]+1 = 1+1 = 2 (indices = [0,2,3])
+# for j in range(2,3):
+# indices[2] = indices[1]+1 = 2+1 = 3 (indices = [0,2,3])
+# yeild ('A','C','D')
+
+# for i in [2,1,0]:
+# if indices[2] (=3) != 2+4-3 = 3 (False)
+# if indices[1] (=2) != 1+4-3 = 2 (False)
+# if indices[0] (=0) != 0+4-3 = 1 (True)
+# break
+# i = 0
+# indices[0] = indices[0]+1 = 1 (indices = [1,2,3])
+# for j in range(1,3):
+# indices[1] = indices[0]+1 = 1+1 = 2
+# indices[2] = indices[1]+1 = 2+1 = 3 (indices = [1,2,3])
+# yield ('B','C','D')
+
+# for i in [2,1,0]:
+# if indices[2] (=3) != 2+4-3 = 3 (False)
+# if indices[1] (=2) != 1+4-3 = 2 (False)
+# if indices[0] (=1) != 0+4-3 = 1 (False)
+# return
+ 
