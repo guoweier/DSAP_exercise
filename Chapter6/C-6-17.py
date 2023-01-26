@@ -1,4 +1,4 @@
-# In the previous excercise, we assume that teh underlying list is initially empty. Redo that exercise, this time preallocating an underlying list with length equal to the stack's maximum capacity.
+# In the previous excercise, we assume that the underlying list is initially empty. Redo that exercise, this time preallocating an underlying list with length equal to the stack's maximum capacity.
 
 class ArrayStack:
     """LIFO Stack implementation using a Python list as underlying storage."""
