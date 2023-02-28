@@ -1,4 +1,4 @@
-# Implement a function that counts the number of nodes in a circularly linked list.
+# Suppose that x and y are references to nodes of circularly linked lists, although not necessarily the same list. Describe a fast algorithm for telling if x and y belong to the same list.
 
 class CircularQueue:
 
@@ -48,18 +48,28 @@ class CircularQueue:
         if self._size > 1:
             self._tail = self._tail._next
 
-    def countnode(self):
-        if self.is_empty():
-            raise ValueError("Queue is empty.")
+    def identify_node(self,e):
         node = self._tail
-        num = 1
-        while node._next != self._tail:
-            num += 1
+        while node._element != e:
             node = node._next
-        return num
+        return node
+
+    def examnode(self,x,y):
+        node = x
+        while node._next != y and node._next != x:
+            node = node._next
+        if node._next == y:
+            result = "x and y are in the same linked list."
+        else:
+            result = "x and y belong to different linked lists."
+        return result
 
 if __name__ in "__main__":
-    Q = CircularQueue()
-    for i in range(20):
-        Q.enqueue(i)
-    print(Q.countnode())
+    Q1 = CircularQueue()
+    Q2 = CircularQueue()
+    for i in range(10):
+        Q1.enqueue(i)
+        Q2.enqueue(i+10)
+    x = Q1.identify_node(4)
+    y = Q2.identify_node(12)
+    print(Q1.examnode(x,y))
