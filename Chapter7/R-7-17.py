@@ -1,4 +1,4 @@
-# Provide support for a __reversed__ method of the PositionalList class that is similar to the given __iter__, but that iterates the elements in reversed order.
+# In the FavoritesLIstMTF class, we rely on public methods of the positional list ADT to move an element of a list at position p to become the first element of the list, while keeping the relative order of the remaining elements unchanged. Internally, that combination of operations causes one node to be removed and a new node to be inserted. Augment the PositionalList class to support a new method, move_to_front(p), that accomplishes this goal more directly, by relinking the existing node.
 
 class _DoublyLinkedBase:
 
@@ -93,12 +93,6 @@ class PositionalList(_DoublyLinkedBase):
             yield cursor.element()
             cursor = self.after(cursor)
 
-    def __reversed__(self):
-        cursor = self.last()
-        while cursor is not None:
-            yield cursor.element()
-            cursor = self.before(cursor)
-
     # ------------------------- mutators ------------------------------ #
     # override inherited version to return Position, rather than None
     def _insert_between(self, e, predecessor, successor):
@@ -129,9 +123,18 @@ class PositionalList(_DoublyLinkedBase):
         original._element = e
         return old_value
 
+    def move_to_front(self, p):
+        e = p.element()
+        self.delete(p)
+        self.add_first(e)
+
+
 if __name__ in "__main__":
     L = PositionalList()
     for i in range(10):
         L.add_last(i)
-    out = list(L.__reversed__())
-    print(out)
+    for i in range(4):
+        p = L.last()
+        L.move_to_front(p)
+
+    print(list(L))
