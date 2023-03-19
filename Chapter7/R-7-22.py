@@ -1,4 +1,4 @@
-# Given the set of element {a,b,c,d,e,f} stored in a list, show the final state of the list, assuming we use the move-to-front heuristic and access the elements according to the following sequence: (a,b,c,d,e,f,a,c,f,b,d,e).
+# Implement a clear() method for the FavoritesList class that returns the list to empty.
 
 # A base class providing a doubly linked list representation.
 class _DoublyLinkedBase:
@@ -183,39 +183,5 @@ class FavoritesList:
             yield item._value
             walk = self._data.after(walk)
 
-# List of elements ordered with move-to-front heuristic.
-class FavoritesListMTF(FavoritesList):
-    # override _move_up to provide move_to_front semantics
-    def _move_up(self, p):
-        if p != self._data.first():
-            self._data.add_first(self._data.delete(p))
-
-    # override top because list is no longer sorted
-    def top(self,k):
-        # Generate sequence of top k elements in terms of access count.
-        if not 1 <= k <= len(self):
-            raise ValueError("Illegal value for k.")
-        # we begin by making a copy of the original list
-        temp = PositionalList()
-        for item in self._data:
-            temp.add_last(item)
-        # we repeatedly find, report, and remove element with largest count.
-        for j in range(k):
-            # find and report next highest from temp
-            highPos = temp.first()
-            walk = temp.after(highPos)
-            while walk is not None:
-                if walk.element()._count > highPos.element()._count:
-                    highPos = walk
-                walk = temp.after(walk)
-            # we have found the element with highest count
-            yield highPos.element()._value
-            temp.delete(highPos)
-
-if __name__ in "__main__":
-    L = FavoritesList()
-    access_ls = ["a","b","c","d","e","f","a","c","f","b","d","e"]
-    for ac in access_ls:
-        L.access(ac)
-    outL = L.top(len(L))
-    print(list(outL))
+    def clear(self):
+        

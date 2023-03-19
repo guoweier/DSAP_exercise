@@ -1,4 +1,4 @@
-# Given the set of element {a,b,c,d,e,f} stored in a list, show the final state of the list, assuming we use the move-to-front heuristic and access the elements according to the following sequence: (a,b,c,d,e,f,a,c,f,b,d,e).
+# Let L be a list of n items maintained according to the move-to-front heuristic. Describe a series of O(n) accesses that will reverse L.
 
 # A base class providing a doubly linked list representation.
 class _DoublyLinkedBase:
@@ -214,7 +214,7 @@ class FavoritesListMTF(FavoritesList):
 
 if __name__ in "__main__":
     L = FavoritesList()
-    access_ls = ["a","b","c","d","e","f","a","c","f","b","d","e"]
+    access_ls = ["a","b","c","d","e","f","f","e","d","c","b","a"]
     for ac in access_ls:
         L.access(ac)
     outL = L.top(len(L))
