@@ -1,4 +1,4 @@
-# Implement a clear() method for the FavoritesList class that returns the list to empty.
+# Implement a reset_counts() method for the FavoritesList class taht resets all elements' access counts to zero (while leaving the order of the list unchanged).
 
 # A base class providing a doubly linked list representation.
 class _DoublyLinkedBase:
@@ -188,12 +188,18 @@ class FavoritesList:
             p = self._data.first()
             self._data.delete(p)
 
-
+    def reset_counts(self):
+        k = len(self)
+        for i in range(k):
+            p = self._data.first()
+            p.element()._count = 0
+            p = self._data.after(p)
 
 if __name__ in "__main__":
     L = FavoritesList()
-    access_ls = ["a","b","c","d","e","f"]
+    access_ls = ["a","b","c","d","e","f","a","f"]
     for ac in access_ls:
         L.access(ac)
-    L.clear()
-    print(len(L))
+    L.reset_counts()
+    outL = L.top(len(L))
+    print(list(outL))
