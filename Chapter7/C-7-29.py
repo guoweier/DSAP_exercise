@@ -1,4 +1,4 @@
-# Describe a fast recursive algorithm for reversing a singly linked list.
+# Describe in detail an algorithm for reversing a singly linked list L using only a constant amount of additional space and not using any recursions.
 
 class LinkedList:
 
@@ -43,26 +43,22 @@ class LinkedList:
         self._size += 1
 
     def get_cursor(self, node, cursor):
-        if cursor._next == node:
-            return cursor
-        else:
-            return self.get_cursor(node, cursor._next)
+        while cursor._next != node:
+            cursor = cursor._next
+        return cursor
 
-    def reverse(self, L, node = "end"):
-        if node == "end":
+    def reverse(self, L):
+        if L.is_empty():
+            L.enqueue(self._tail._element)
             node = self._tail
-            L.enqueue(node._element)
 
         cursor = self._head
-        if node == self._head:
-            L.enqueue(node._element)
-            return L
-        else:
+        while node != self._head:
             Cursor = self.get_cursor(node, cursor)
             L.enqueue(Cursor._element)
             node = Cursor
-            return self.reverse(L, node)
-
+        L.enqueue(self._head._element)
+        return L
 
 if __name__ in "__main__":
     L = LinkedList()
