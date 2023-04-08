@@ -1,6 +1,6 @@
-# Design a forward list ADT that abstracts the operations on a singly linked list, much as the positional list ADT abstracts in the use of a doubly linked list. Implement a ForwardList class that supports such an ADT.
+# Design a circular positional list ADT that abstracts a circularly linked list in the same way that the positional list ADT abstracts a doubly linked list, with a notion of a designated "cursor" position within the list.
 
-class _SinglyLinkedList:
+class _CircularLinkedList:
 
     class _Node:
         def __init__(self, element, next):
@@ -8,40 +8,29 @@ class _SinglyLinkedList:
             self._next = next
 
     def __init__(self):
-        self._header = self._Node(None,None)
-        self._trailer = self._Node(None, None)
-        self._header._next = self._trailer
+        self._cursor = self._Node(None,None)
+        self._cursor._next = self._cursor
         self._size = 0
 
     def __len__(self):
         return self._size
 
-    def is_empty():
+    def is_empty(self):
         return self._size == 0
 
-    def _insert_between(self, e, successor):
-        newest = self._Node(e, successor)
-        cursor = self._header
-        while cursor._next != successor:
-            cursor = cursor._next
+    def _insert_after(self, e, cursor):
+        newest = self._Node(e, None)
+        newest._next = cursor._next
         cursor._next = newest
-        newest._next = successor
         self._size += 1
-        return newest
 
-    def _delete_node(self, node):
-        successor = node._next
-        cursor = self._header
-        while cursor._next != node:
-            cursor = cursor._next
-        cursor._next = successor
+    def _delete_after(self, cursor):
+        node = cursor._next
+        cursor._next = node._next
         self._size -= 1
-        element = node._element
-        node._next = node._element = None
-        return element
+        return node._element
 
-
-class ForwardList(_SinglyLinkedList):
+class PositionalList(_CircularLinkedList):
 
     # --------------------- nested Position class ---------------------------- #
     class Position:
@@ -69,14 +58,14 @@ class ForwardList(_SinglyLinkedList):
         return p._node
 
     def _make_position(self, node):
-        if node is self._header or node is self._trailer:
+        if node is self._cursor:
             return None
         else:
             return self.Position(self, node)
 
     # ----------------------- accessors ---------------------------- #
     def first(self):
-        return self._make_position(self._header._next)
+        return self._make_position(self._cursor._next)
 
     def after(self, p):
         node = self._validate(p)
@@ -90,27 +79,27 @@ class ForwardList(_SinglyLinkedList):
 
     # ------------------------- mutators ------------------------------ #
     # override inherited version to return Position, rather than None
-    def _insert_between(self, e, successor):
-        node = super()._insert_between(e, successor)
+    def _insert_after(self, e, cursor):
+        node = super()._insert_after(e, cursor)
         return self._make_position(node)
 
-    def add_first(self, e):
-        return self._insert_between(e, self._header._next)
-
-    def add_last(self, e):
-        return self._insert_between(e, self._trailer)
+    def add_first_last(self, e):
+        return self._insert_after(e, self._cursor)
 
     def add_before(self, p, e):
-        original = self._validate(p)
-        return self._insert_between(e, original)
+        c = p
+        while c._next != p:
+            c = c._next
+        original = self._validate(c)
+        return self._insert_after(e, original)
 
     def add_after(self, p, e):
-        original = self._validate(p._next)
-        return self._insert_between(e, original)
+        original = self._validate(p)
+        return self._insert_after(e, original)
 
     def delete(self, p):
         original = self._validate(p)
-        return self._delete_node(original)
+        return self._delete_after(original)
 
     def replace(self, p, e):
         original = self._validate(p)
@@ -118,9 +107,8 @@ class ForwardList(_SinglyLinkedList):
         original._element = e
         return old_value
 
-
 if __name__ in "__main__":
-    FL = ForwardList()
+    CL = PositionalList()
     for i in range(10):
-        FL.add_last(i)
-    print(list(FL))
+        CL.add_first_last(i)
+    print(list(CL))
