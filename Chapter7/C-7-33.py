@@ -38,5 +38,30 @@ class _DoublyLinkedBase:
         node._prev = node._next = node._element = None
         return element
 
-    def reverse(self):
-        
+    def reverse(self, node1="header", node2="trailer"):
+        if node1 == "header":
+            node1 = self._header
+            node2 = self._trailer
+        if node1 == node2:
+            return self
+        elif node1._next == node2 and node2._prev == node1:
+            predecessor = node1._prev
+            successor = node2._next
+            predecessor._next = node2
+            node2._prev = predecessor
+            node2._next = node1
+            node1._prev = node2
+            node1._next = successor
+            successor._prev = node1
+            return self
+        else:
+            predecessor = node1._prev
+            successor = node2._next
+            node1_new = node1._next
+            node2_new = node2._prev
+
+            predecessor._next = node2
+            node2._prev = predecessor
+            node1._next = successor
+            successor._prev = node1
+            return self.reverse(node1_new, node2_new)
