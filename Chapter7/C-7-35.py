@@ -90,28 +90,27 @@ class PositionalList(_DoublyLinkedBase):
     # ------------------------- nested iter class ---------------------------- #
 
     class _Iterator:
-        def __init__(self):
-            self._cursor = self._header
+        def __init__(self, head):
+            self._cursor = head
 
         def __start__(self):
-            return self.first()
+            return self._cursor
 
         def __next__(self):
-            self._cursor = self._cursor._next
-            if self._cursor is not None:
-                return(cursor.element())
-            else:
-                raise StopIterator()
+            if self._cursor._next is not None:
+                self._cursor = self._cursor._next
+                return self._cursor._element
 
         def __iter__(self):
             return self
 
     def iterator(self):
-        Iter = self._Iterator()
+        head = self.first()._node
+        Iter = self._Iterator(head)
         cursor = Iter.__start__()
-        while cursor is not None:
-            print(cursor.element())
-            cursor = Iter.__next__()
+        while cursor._next._next is not None:
+            print(Iter.__next__())
+            cursor = cursor._next
 
     # ------------------------- mutators ------------------------------ #
     # override inherited version to return Position, rather than None
@@ -145,4 +144,6 @@ class PositionalList(_DoublyLinkedBase):
 
 if __name__ in "__main__":
     PL = PositionalList()
-    
+    for i in range(20):
+        PL.add_last(i)
+    PL.iterator()
