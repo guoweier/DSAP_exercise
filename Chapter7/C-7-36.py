@@ -24,7 +24,7 @@ class _DoublyLinkedBase:
             newest = self._Node(e, None, None)
             self._head = newest
             self._tail = newest
-        if successor == self._head:
+        elif successor == self._head:
             newest = self._Node(e, None, successor)
             self._head = newest
             successor._prev = newest
@@ -41,7 +41,7 @@ class _DoublyLinkedBase:
             newest = self._Node(e, None, None)
             self._head = newest
             self._tail = newest
-        if predecessor == self._tail:
+        elif predecessor == self._tail:
             newest = self._Node(e, predecessor, None)
             self._tail = newest
             predecessor._next = newest
@@ -56,17 +56,19 @@ class _DoublyLinkedBase:
     def _delete_before(self, node):
         if self.is_empty():
             raise ValueError("The list is empty.")
-        if self.__len__() == 1:
+        elif self.__len__() == 1:
             self._head = None
             self._tail = None
-
-        successor = node._next
-        if node == self._head:
-            self._head = successor
         else:
-            predecessor = node._prev
-            predecessor._next = successor
-            successor._prev = predecessor
+            if node == self._head:
+                self._head = node._next
+            elif node == self._tail:
+                self._tail = node._prev
+            else:
+                predecessor = node._prev
+                successor = node._next
+                predecessor._next = successor
+                successor._prev = predecessor
         self._size -= 1
         element = node._element
         node._prev = node._next = node._element = None
@@ -75,17 +77,19 @@ class _DoublyLinkedBase:
     def _delete_after(self, node):
         if self.is_empty():
             raise ValueError("The list is empty.")
-        if self.__len__() == 1:
+        elif self.__len__() == 1:
             self._head = None
             self._tail = None
-
-        predecessor = node._prev
-        if node == self._tail:
-            self._tail = predecessor
         else:
-            successor = node._next
-            predecessor._next = successor
-            successor._prev = predecessor
+            if node == self._tail:
+                self._tail = predecessor
+            elif node == self._head:
+                self._head = node._next
+            else:
+                predecessor = node._prev
+                successor = node._next
+                predecessor._next = successor
+                successor._prev = predecessor
         self._size -= 1
         element = node._element
         node._prev = node._next = node._element = None
@@ -140,7 +144,7 @@ class PositionalList(_DoublyLinkedBase):
 
     def __iter__(self):
         cursor = self.first()
-        while cursor is not None:
+        while cursor != self._tail:
             yield cursor.element()
             cursor = self.after(cursor)
 
@@ -180,4 +184,8 @@ class PositionalList(_DoublyLinkedBase):
 
 if __name__ in "__main__":
     L = PositionalList()
-    
+    for i in range(10):
+        L.add_last(i)
+    for j in range(4):
+        L.delete_after(L.first())
+    print(L.first().element())

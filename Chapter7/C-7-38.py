@@ -1,4 +1,4 @@
-# Implement a reset_counts() method for the FavoritesList class that resets all elements' access counts to zero (while leaving the order of the list unchanged).
+# There is a simple, but inefficient, alogirthm, called bubble-sort, for sorting a list L of n comparable elements. This algorithm scans the list n-1 times, where, in each scan, the algorithm compares the current element with the next one and swaps them if they are out of order. Implement a bubble_sort function that takes a positional list L as a parameter. What is the running time of this algorithm, assuming the positional list is implemented with a doubly linked list?
 
 # A base class providing a doubly linked list representation.
 class _DoublyLinkedBase:
@@ -123,83 +123,29 @@ class PositionalList(_DoublyLinkedBase):
         original = self._validate(p)
         old_value = original._element
         original._element = e
-        return old_value
 
-
-# List of elements ordered from most frequently accessed to least.
-class FavoritesList:
-
-    # ---------------------------- nested _Item class --------------------------------- #
-    class _Item:
-        __slots__ = '_value', '_count'
-        def __init__(self, e):
-            self._value = e
-            self._count = 0
-
-    # ---------------------------- nonpublic utilities -------------------------------- #
-    def _find_position(self, e):
-        walk = self._data.first()
-        while walk is not None and walk.element()._value != e:
-            walk = self._data.after(walk)
-        return walk
-
-    def _move_up(self, p):
-        if p != self._data.first():
-            cnt = p.element()._count
-            walk = self._data.before(p)
-            if cnt > walk.element()._count:
-                while (walk != self._data.first() and cnt > self._data.before(walk).element()._count):
-                    walk = self._data.before(walk)
-                self._data.add_before(walk, self._data.delete(p))
-
-    # --------------------------- public methods ------------------------------ #
-    def __init__(self):
-        self._data = PositionalList()
-
-    def __len__(self):
-        return len(self._data)
-
-    def is_empty(self):
-        return len(self._data) == 0
-
-    def access(self, e):
-        p = self._find_position(e)
-        if p is None:
-            p = self._data.add_last(self._Item(e))
-        p.element()._count += 1
-        self._move_up(p)
-
-    def remove(self, e):
-        p = self._find_position(e)
-        if p is not None:
-            self._data.delete(p)
-
-    def top(self, k):
-        if not 1 <= k <= len(self):
-            raise ValueError("Illegal value for k.")
-        walk = self._data.first()
-        for j in range(k):
-            item = walk.element()
-            yield item._value
-            walk = self._data.after(walk)
-
-    def clear(self):
-        while self._data.is_empty() == False:
-            p = self._data.first()
-            self._data.delete(p)
-
-    def reset_counts(self):
-        k = len(self)
-        for i in range(k):
-            p = self._data.first()
-            p.element()._count = 0
-            p = self._data.after(p)
+# Function: bubble sorting
+def bubble_sort(L):
+    num1 = L.last()
+    while num1 != L.first():
+        num2 = L.first()
+        while num2 != num1:
+            num2_next = L.after(num2)
+            e2 = num2.element()
+            en2 = num2_next.element()
+            if e2 > en2:
+                L.replace(num2, en2)
+                L.replace(num2_next, e2)
+            num2 = L.after(num2)
+        num1 = L.before(num1)
+    return L
 
 if __name__ in "__main__":
-    L = FavoritesList()
-    access_ls = ["a","b","c","d","e","f","a","f"]
-    for ac in access_ls:
-        L.access(ac)
-    L.reset_counts()
-    outL = L.top(len(L))
-    print(list(outL))
+    L = PositionalList()
+    for i in range(5):
+        L.add_last(i)
+    for j in range(4,-4,-1):
+        L.add_last(j)
+    print(list(L.__iter__()))
+    LS = bubble_sort(L)
+    print(list(LS.__iter__()))

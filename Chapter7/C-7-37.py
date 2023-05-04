@@ -1,4 +1,6 @@
-# Implement a reset_counts() method for the FavoritesList class that resets all elements' access counts to zero (while leaving the order of the list unchanged).
+# Implement a function that accepts a PositionalList L of n integers sorted in nondecreasing order, and another value V, and determines in O(n) time if there are two elements of L that sum precisely to V. The function should return a pair of positions of such elements, if found, or None otherwise.
+
+# Comment: Nondecreasing order simply refers to the idea of sorting things where subsequent items are greater than, or equal to the previous item.
 
 # A base class providing a doubly linked list representation.
 class _DoublyLinkedBase:
@@ -126,80 +128,25 @@ class PositionalList(_DoublyLinkedBase):
         return old_value
 
 
-# List of elements ordered from most frequently accessed to least.
-class FavoritesList:
-
-    # ---------------------------- nested _Item class --------------------------------- #
-    class _Item:
-        __slots__ = '_value', '_count'
-        def __init__(self, e):
-            self._value = e
-            self._count = 0
-
-    # ---------------------------- nonpublic utilities -------------------------------- #
-    def _find_position(self, e):
-        walk = self._data.first()
-        while walk is not None and walk.element()._value != e:
-            walk = self._data.after(walk)
-        return walk
-
-    def _move_up(self, p):
-        if p != self._data.first():
-            cnt = p.element()._count
-            walk = self._data.before(p)
-            if cnt > walk.element()._count:
-                while (walk != self._data.first() and cnt > self._data.before(walk).element()._count):
-                    walk = self._data.before(walk)
-                self._data.add_before(walk, self._data.delete(p))
-
-    # --------------------------- public methods ------------------------------ #
-    def __init__(self):
-        self._data = PositionalList()
-
-    def __len__(self):
-        return len(self._data)
-
-    def is_empty(self):
-        return len(self._data) == 0
-
-    def access(self, e):
-        p = self._find_position(e)
-        if p is None:
-            p = self._data.add_last(self._Item(e))
-        p.element()._count += 1
-        self._move_up(p)
-
-    def remove(self, e):
-        p = self._find_position(e)
-        if p is not None:
-            self._data.delete(p)
-
-    def top(self, k):
-        if not 1 <= k <= len(self):
-            raise ValueError("Illegal value for k.")
-        walk = self._data.first()
-        for j in range(k):
-            item = walk.element()
-            yield item._value
-            walk = self._data.after(walk)
-
-    def clear(self):
-        while self._data.is_empty() == False:
-            p = self._data.first()
-            self._data.delete(p)
-
-    def reset_counts(self):
-        k = len(self)
-        for i in range(k):
-            p = self._data.first()
-            p.element()._count = 0
-            p = self._data.after(p)
+def pair_check(L, V):
+    num1 = L.first()
+    num2 = L.last()
+    while num1 != num2:
+        if num1.element() + num2.element() == V:
+            return [num1.element(), num2.element()]
+        elif num1.element() + num2.element() < V:
+            num1 = L.after(num1)
+        else:
+            num2 = L.before(num2)
+    return "None"
 
 if __name__ in "__main__":
-    L = FavoritesList()
-    access_ls = ["a","b","c","d","e","f","a","f"]
-    for ac in access_ls:
-        L.access(ac)
-    L.reset_counts()
-    outL = L.top(len(L))
-    print(list(outL))
+    L = PositionalList()
+    for i in range(5):
+        L.add_last(i)
+    for i in range(4,8):
+        L.add_last(i)
+    for i in range(7,10):
+        L.add_last(i)
+    V = 4
+    print(pair_check(L,V))
