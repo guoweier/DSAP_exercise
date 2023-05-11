@@ -1,0 +1,1 @@
+# Describe an efficient method for maintaining a favorites list L, with move-to-front heuristic, such thath elements that have not been accessed in the recent n accesses are automatically purged from the list. 
