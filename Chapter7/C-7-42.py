@@ -1,6 +1,4 @@
-# Exercise C-5-29 introduces the notion of a natural join of two databases. Describe and analyze an efficient algorithm for computing the natural join of a linked list A of n pairs and a linked list B of m pairs.
-
-import numpy as np
+# Write a Scoreboard class that maintains the top 10 scores for a game application using a singly linked list, rather than the array that was used in Section 5.5.1.
 
 # A base class providing a doubly linked list representation.
 class _DoublyLinkedBase:
@@ -125,46 +123,68 @@ class PositionalList(_DoublyLinkedBase):
         old_value = original._element
         original._element = e
 
+# List of elements ordered from most frequently accessed to least.
+class FavoritesList:
 
-def natural_join(A, B):
-    n = A.__len__()
-    m = B.__len__()
-    p1 = A.first()
-    p2 = B.first()
-    Out = PositionalList()
-    if n <= m:
-        while p1 is not None:
-            e = p1.element() + p2.element()
-            ejoin = np.unique(e)
-            Out.add_last(ejoin)
-            p1 = A.after(p1)
-            p2 = B.after(p2)
-        while p2 is not None:
-            e = p2.element()
-            Out.add_last(e)
-            p2 = B.after(p2)
+    # -------------------------------- nested _Item class ------------------------------------ #
+    class _Item:
+        __slots__ = '_value', '_count', '_access'
+        def __init__(self,e):
+            self._value = e
+            self._count = 0
 
-    if n > m:
-        while p2 is not None:
-            e = p1.element() + p2.element()
-            ejoin = np.unique(e)
-            Out.add_last(ejoin)
-            p1 = A.after(p1)
-            p2 = B.after(p2)
-        while p1 is not None:
-            e = p1.element()
-            Out.add_last(e)
-            p1 = A.after(p1)
+    # ------------------------------ nonpublic utilities ----------------------------- #
+    def _find_position(self, e):
+        walk = self._data.first()
+        while walk is not None and walk.element()._value != e:
+            walk = self._data.after(walk)
+        return walk
 
-    return Out
+    def _move_up(self, p):
+        if p != self._data.first():
+            cnt = p.element()._count
+            walk = self._data.before(p)
+            if cnt > walk.element()._count:
+                while (walk != self._data.first() and cnt > self._data.before(walk).element()._count):
+                    walk = self._data.before(walk)
+                self._data.add_before(walk, self._data.delete(p))
+
+    # ------------------------------ public methods ---------------------------------- #
+    def __init__(self):
+        self._data = PositionalList()
+
+    def __len__(self):
+        return len(self._data)
+
+    def is_empty(self):
+        return len(self._data) == 0
+
+    def access(self, e):
+        p = self._find_position(e)
+        if p is None:
+            p = self._data.add_last(self._Item(e))
+        p.element()._count += 1
+        self._move_up(p)
+
+    def remove(self, e):
+        p = self._find_position(e)
+        if p is not None:
+            self._data.delete(p)
+
+    def top(self, k):
+        if not 1 <= k <= len(self):
+            raise ValueError("Illegal value for k.")
+        walk = self._data.first()
+        for j in range(k):
+            item = walk.element()
+            yield item._value
+            walk = self._data.after(walk)
 
 
-if __name__ in "__main__":
-    A = PositionalList()
-    B = PositionalList()
-    for i in range(10):
-        A.add_last([i,i+1])
-    for j in range(5):
-        B.add_last([j+1,j+3])
-    out = natural_join(A,B)
-    print(out.first().element())
+# class for game scoreboard
+class Scoreboard:
+
+    def __init__(self):
+        self._board = FavoritesList()
+
+    
