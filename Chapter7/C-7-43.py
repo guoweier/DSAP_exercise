@@ -123,7 +123,6 @@ class PositionalList(_DoublyLinkedBase):
         old_value = original._element
         original._element = e
 
-
 def card_shuffle(L):
     # prepare L1 and L2
     L1 = PositionalList()
