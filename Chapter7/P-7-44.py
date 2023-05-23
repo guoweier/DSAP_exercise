@@ -1,6 +1,8 @@
-# Exercise C-5-29 introduces the notion of a natural join of two databases. Describe and analyze an efficient algorithm for computing the natural join of a linked list A of n pairs and a linked list B of m pairs.
-
-import numpy as np
+# Write a simple text editor that stores and displays a string of characeters using the positional list ADT, together with a cursor object that highlights a position in this string. A simple interface is to print the string and then to use a second line of output to underline the position of the cursor. Your editor should support the follwoing operations:
+# - left: Move cursor left one character (do nothing if at beginning)
+# - right: Move cursor right one character (do nothing if at end)
+# - insert c: Insert the character c just after the cursor.
+# - delete: Delete the character just after the cursor (do nothing at end)
 
 # A base class providing a doubly linked list representation.
 class _DoublyLinkedBase:
@@ -125,46 +127,7 @@ class PositionalList(_DoublyLinkedBase):
         old_value = original._element
         original._element = e
 
+class TextEditor:
 
-def natural_join(A, B):
-    n = A.__len__()
-    m = B.__len__()
-    p1 = A.first()
-    p2 = B.first()
-    Out = PositionalList()
-    if n <= m:
-        while p1 is not None:
-            e = p1.element() + p2.element()
-            ejoin = np.unique(e)
-            Out.add_last(ejoin)
-            p1 = A.after(p1)
-            p2 = B.after(p2)
-        while p2 is not None:
-            e = p2.element()
-            Out.add_last(e)
-            p2 = B.after(p2)
-
-    if n > m:
-        while p2 is not None:
-            e = p1.element() + p2.element()
-            ejoin = np.unique(e)
-            Out.add_last(ejoin)
-            p1 = A.after(p1)
-            p2 = B.after(p2)
-        while p1 is not None:
-            e = p1.element()
-            Out.add_last(e)
-            p1 = A.after(p1)
-
-    return Out
-
-
-if __name__ in "__main__":
-    A = PositionalList()
-    B = PositionalList()
-    for i in range(10):
-        A.add_last([i,i+1])
-    for j in range(5):
-        B.add_last([j+1,j+3])
-    out = natural_join(A,B)
-    print(out.first().element())
+    def __init__(self):
+        self._text = PositionalList()

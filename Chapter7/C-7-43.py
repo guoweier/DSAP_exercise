@@ -1,6 +1,4 @@
-# Exercise C-5-29 introduces the notion of a natural join of two databases. Describe and analyze an efficient algorithm for computing the natural join of a linked list A of n pairs and a linked list B of m pairs.
-
-import numpy as np
+# Describe a method for performing a card shuffle of a list of 2n elements, by converting it into two lists. A card shuffle is a permutation where a list L is cut into two lists, L1 and L2, where L1 is the first half of L and L2 is the second half of L, and then these two lists are merged into one by taking the first element in L1, then the first element in L2, followed by the second element in L1, the second element in L2, and so on.
 
 # A base class providing a doubly linked list representation.
 class _DoublyLinkedBase:
@@ -126,45 +124,38 @@ class PositionalList(_DoublyLinkedBase):
         original._element = e
 
 
-def natural_join(A, B):
-    n = A.__len__()
-    m = B.__len__()
-    p1 = A.first()
-    p2 = B.first()
+def card_shuffle(L):
+    # prepare L1 and L2
+    L1 = PositionalList()
+    L2 = PositionalList()
+    num = len(L)
+    # cut list L
+    walk = L.first()
+    for i in range(num//2):
+        L1.add_last(walk.element())
+        walk = L.after(walk)
+    for j in range(num//2, num):
+        L2.add_last(walk.element())
+        walk = L.after(walk)
+    # merge list
     Out = PositionalList()
-    if n <= m:
-        while p1 is not None:
-            e = p1.element() + p2.element()
-            ejoin = np.unique(e)
-            Out.add_last(ejoin)
-            p1 = A.after(p1)
-            p2 = B.after(p2)
-        while p2 is not None:
-            e = p2.element()
-            Out.add_last(e)
-            p2 = B.after(p2)
-
-    if n > m:
-        while p2 is not None:
-            e = p1.element() + p2.element()
-            ejoin = np.unique(e)
-            Out.add_last(ejoin)
-            p1 = A.after(p1)
-            p2 = B.after(p2)
-        while p1 is not None:
-            e = p1.element()
-            Out.add_last(e)
-            p1 = A.after(p1)
-
+    p1 = L1.first()
+    p2 = L2.first()
+    while p1 is not None:
+        Out.add_last(p1.element())
+        Out.add_last(p2.element())
+        p1 = L1.after(p1)
+        p2 = L2.after(p2)
+    if len(L1) < len(L2):
+        Out.add_last(p2.element())
     return Out
 
-
 if __name__ in "__main__":
-    A = PositionalList()
-    B = PositionalList()
+    L = PositionalList()
     for i in range(10):
-        A.add_last([i,i+1])
-    for j in range(5):
-        B.add_last([j+1,j+3])
-    out = natural_join(A,B)
-    print(out.first().element())
+        L.add_last(i+1)
+    result = card_shuffle(L)
+    cursor = result.first()
+    while cursor is not None:
+        print(cursor.element())
+        cursor = result.after(cursor)
