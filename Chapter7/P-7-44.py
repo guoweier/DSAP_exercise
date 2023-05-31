@@ -1,4 +1,4 @@
-# Write a simple text editor that stores and displays a string of characeters using the positional list ADT, together with a cursor object that highlights a position in this string. A simple interface is to print the string and then to use a second line of output to underline the position of the cursor. Your editor should support the follwoing operations:
+# Write a simple text editor that stores and displays a string of characeters using the positional list ADT, together with a cursor object that highlights a position in this string. A simple interface is to print the string and then to use a second line of output to underline the position of the cursor. Your editor should support the following operations:
 # - left: Move cursor left one character (do nothing if at beginning)
 # - right: Move cursor right one character (do nothing if at end)
 # - insert c: Insert the character c just after the cursor.
@@ -129,5 +129,55 @@ class PositionalList(_DoublyLinkedBase):
 
 class TextEditor:
 
-    def __init__(self):
+    def __init__(self, string):
         self._text = PositionalList()
+        for char in string:
+            self._text.add_last(char)
+        self._cursor = self._text.first()
+
+    def _print_string(self):
+        line = ""
+        p = self._text.first()
+        while p is not None:
+            line += p.element()
+            p = self._text.after(p)
+        return line
+
+    def _print_cursor(self, direction):
+        line = ""
+        walk = self._text.first()
+        n = 0
+        while walk != self._cursor:
+            walk = self._text.after(walk)
+            n += 1
+        if direction == "left":
+            for i in range(n-1):
+                line += " "
+        elif direction == "right":
+            for i in range(n+1):
+                line += " "
+        line += "_"
+        return line
+
+    def left(self):
+        line1 = self._print_string()
+        if self._cursor == self._text.first():
+            line2 = "_"
+        else:
+            line2 = self._print_cursor("left")
+        print(line1+"\n"+line2)
+
+    def right(self):
+        line1 = self._print_string()
+        if self._cursor == self._text.last():
+            line2 = ""
+            str_len = len(self._text)
+            for i in range(str_len-1):
+                line2 += " "
+            line2 += "_"
+        else:
+            line2 = self._print_cursor("right")
+        print(line1+"\n"+line2)
+
+    def insert(self, c):
+        
