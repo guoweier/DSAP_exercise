@@ -127,6 +127,7 @@ class PositionalList(_DoublyLinkedBase):
         old_value = original._element
         original._element = e
 
+# class TextEditor
 class TextEditor:
 
     def __init__(self, string):
@@ -156,6 +157,9 @@ class TextEditor:
         elif direction == "right":
             for i in range(n+1):
                 line += " "
+        elif direction == "neutral":
+            for i in range(n):
+                line += " "
         line += "_"
         return line
 
@@ -165,7 +169,8 @@ class TextEditor:
             line2 = "_"
         else:
             line2 = self._print_cursor("left")
-        print(line1+"\n"+line2)
+        result = line1+"\n"+line2
+        return result
 
     def right(self):
         line1 = self._print_string()
@@ -177,7 +182,34 @@ class TextEditor:
             line2 += "_"
         else:
             line2 = self._print_cursor("right")
-        print(line1+"\n"+line2)
+        result = line1+"\n"+line2
+        return result
 
-    def insert(self, c):
-        
+    def insert_char(self, c):
+        self._text.add_after(self._cursor, c)
+        line1 = self._print_string()
+        line2 = self._print_cursor("neutral")
+        result = line1+"\n"+line2
+        return result
+
+    def delete_char(self):
+        if self._cursor == self._text.last():
+            line1 = self._print_string()
+        else:
+            rm_char = self._text.after(self._cursor)
+            self._text.delete(rm_char)
+            line1 = self._print_string()
+        line2 = self._print_cursor("neutral")
+        result = line1+"\n"+line2
+        return result
+
+if __name__ in "__main__":
+    text = TextEditor("Hello Baibey!")
+    # test right()
+    print(text.right())
+    # test left()
+    print(text.left())
+    # test insert_char()
+    print(text.insert_char("H"))
+    # test delete_char()
+    print(text.delete_char())
