@@ -69,7 +69,27 @@ class BinaryTree(Tree):
             else:
                 return self.left(parent)
 
-def leaf_left(T):
-    count = 0
-    
-    if T.is_leaf(p) == True:
+    def children(self, p):
+        # Generate an interation of Positions representing p's children.
+        if self.left(p) is not None:
+            yield self.left(p)
+        if self.right(p) is not None:
+            yield self.right(p)
+
+
+# ------------------------ left leaf ---------------------------- #
+def left_leaf(T, p, count=0):
+    # use preorder transverse to navigate all nodes in the tree. 
+    if not T.is_empty():
+        for c in T.children(p):
+            for other in T.left_leaf(T, c, count):
+                if T.is_leaf(other) and T.left(c)==other:
+                    count += 1
+    return count
+
+
+# main
+if __name__ in "__main__":
+    T = BinaryTree()
+    root = T.root()
+    count = left_leaf(T, root)
