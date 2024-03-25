@@ -53,7 +53,7 @@ class BinaryEulerTree(EulerTour):
             path.append(0)
             results[0] = self._tour(self._tree.left(p), d+1, path)
             path.pop()
-        self._hook_invist(p, d, path)
+        self._hook_invisit(p, d, path)
         if self._tree.right(p) is not None:
             path.append(1)
             results[1] = self._tour(self._tree.right(p), d+1, path)
@@ -64,5 +64,19 @@ class BinaryEulerTree(EulerTour):
     def _hook_invist(self, p, d, path):
         pass
 
-    def count_descendants(self):
-        
+    def count_descendants(self, p, d, path, c=0):
+        results = [None, None]
+        self._hook_previsit(p, d, path)
+        if self._tree.left(p) is not None:
+            path.append(0)
+            c += 1
+            results[0] = self.count_descendants(self._tree.left(p), d+1, path, c)
+            path.pop()
+        self._hook_invisit(p, d, path)
+        if self._tree.right(p) is not None:
+            path.append(1)
+            c += 1
+            results[1] = self.count_descendants(self._tree.right(p), d+1, path, c)
+            path.pop()
+        self._hook_postvisit(p, d, path, results)
+        return c+1
