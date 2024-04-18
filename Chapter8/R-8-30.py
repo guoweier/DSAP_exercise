@@ -1,5 +1,91 @@
 # The build_expression_tree method of the ExpressionTree class requires input that is an iterable of string tokens. We used a convenient example, '(((3+1)x4)/((9-5)+2))', in which each character is its own token, so that the string itself sufficed as input to build_expression_tree. In general, a string, such as '(35 + 14)', must be explicitly tokenized into list ['(', '35', '+', '14', ')'] so as to ignore whitespace and to recognize multidigit numbers as a single token. Write a utility method, tokenize(raw), that returns such a list of tokens for a raw string.
 
+# ----------------------------------- Tree ----------------------------------- #
+class Tree:
+    """Abstract base class representing a tree structure."""
+
+    # ------------------------ nested Position class -------------------------- #
+    class Position:
+        """An abstraction representing the location of a single element."""
+
+        def __eq__(self, other):
+            """Return True if other Position represents the same location."""
+            raise NotImplementedError('must be implemented by subclass')
+
+        def __ne__(self, other):
+            """Return True of other does not represent the same location."""
+            return not (self == other) # opposite of __eq__
+
+    # -------- abstract methods that concrete subclass must support ----------- #
+    def root(self):
+        """Return Position representing the tree's root (or None if empty)."""
+        raise NotImplementedError('must be implemented by subclass')
+
+    def parent(self, p):
+        """Return Position representing the tree's parent (or None if empty)."""
+        raise NotImplementedError('must be implemented by subclass')
+
+    def num_children(self, p):
+        """Return the number of children that Position p has."""
+        raise NotImplementedError('must be implemented by subclass')
+
+    def children(self, p):
+        """Generate an iteration of Position representing p's children."""
+        raise NotImplementedError('must be implemented by subclass')
+
+    def __len__(self):
+        """Return the total number of elements in the tree."""
+        raise NotImplementedError('must be implemented by subclass')
+
+    # -------------- oncrete methods implemented in this class -------------- #
+    def is_root(self, p):
+        """Return True if Position p represents the root of the tree."""
+        return self.root() == p
+
+    def is_leaf(self, p):
+        """Return True if Position  does not have any children."""
+        return self.num_children(p) == 0
+
+    def is_empty(self):
+        """Return True if the tree is empty."""
+        return len(self) == 0
+
+# ----------------------------------- BinaryTree -------------------------------------------- #
+class BinaryTree(Tree):
+    """Abstract base class representing a binary tree structure."""
+
+    # ------------------------- additional abstract methods -------------------------- #
+    def left(self, p):
+        """Return a Position representing p's left child.
+        Return None if p does not have a left child.
+        """
+        raise NotImplementedError('must be implemented by subclass')
+
+    def right(self, p):
+        """Return a Position representing p's right child.
+        Return None if p does not have right child.
+        """
+        raise NotImplementedError('must be implemented by subclass')
+
+    # -------- concrete methods implemented in this class ------------- #
+    def sibling(self, p):
+        """Return a Position representing p's sibling (or None if no sibling)"""
+        parent = self.parent(p)
+        if parent is None: # p must be the root
+            return None # root has no sibling
+        else:
+            if p == self.left(parent): # possibly None
+                return self.right(parent)
+            else:
+                return self.left(parent) # possibly None
+
+    def children(self, p):
+        """Generate an iteration of Position representing p's children."""
+        if self.left(p) is not None:
+            yield self.left(p)
+        if self.right(p) is not None:
+            yield self.right(p)
+
 # ----------------------------------- LinkedBinaryTree -------------------------------------- #
 class LinkedBinaryTree(BinaryTree):
     """Linked representation of a binary tree structure. """
@@ -164,7 +250,7 @@ class LinkedBinaryTree(BinaryTree):
         if not t2.is_empty(): # attached t2 as right subtree of node
             t2._root._parent = node
             node._right = t2._root
-            t2._root = None # set t2 instance to empty 
+            t2._root = None # set t2 instance to empty
             t2._size = 0
 
 # ----------------------------------- Expression Tree --------------------------------------- #
