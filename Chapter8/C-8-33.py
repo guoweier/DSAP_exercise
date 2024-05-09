@@ -1,0 +1,1 @@
+# Let T be a (possibly improper) binary tree with n nodes, and let D be the sum of the depths of all the external nodes of T. decribe a configuration for T such that D is Omega(n^2). Such a tree would be the wrst case for the asymptotic running time of method _height1 (Code Fragment 8.4).
