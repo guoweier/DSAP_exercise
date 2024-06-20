@@ -5,7 +5,7 @@
 
 # The subtree needs to have at least one child. So the number of subtrees are equivalent to the number of internal nodes.
 # So the second condition can be substitue to:
-# - The roots of T' and T;; have the same nI, and all their internal nodes have the same nI.
+# - The roots of T' and T'' have the same nI, and all their internal nodes have the same nI.
 
 # ----------------------------------- Tree ----------------------------------- #
 class Tree:
