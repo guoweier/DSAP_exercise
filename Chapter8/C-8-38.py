@@ -142,6 +142,23 @@ class LinkedBinaryTree(BinaryTree):
         node._parent = node
         return node._element
 
+    def _delete_subtree(self, p):
+        """Removes the entire subtree rooted at position p."""
+        # The running time is O(n^2)
+        node = self._validate(p)
+        if self.is_leaf(p):
+            parent = node._parent
+            if node is parent._left:
+                parent._left = None
+            else:
+                parent._right = None
+            self._size -= 1
+            node._parent = None
+            return node._element
+        else:
+            for c in self.children(p):
+                return self._delete_subtree(c)
+
     def _attach(self, p, t1, t2):
         """Attach trees t1 and t2 as left and right subtrees of external p."""
         node = self._validate(p)
@@ -244,4 +261,4 @@ class Tree:
 
     def is_empty(self):
         """Return True if the tree is empty."""
-        return len(self) == 0 
+        return len(self) == 0
