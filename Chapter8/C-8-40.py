@@ -45,7 +45,7 @@ class LinkedBinaryTree(BinaryTree):
     # ---------------------- binary tree constructor -------------------------- #
     def __init__(self):
         """Create an initially empty binary tree."""
-        self._root = None 
+        self._sentinel = self._Node(None,None,None,None)
         self._size = 0
 
     # ---------------------- public accessors -------------------------- #
@@ -86,10 +86,10 @@ class LinkedBinaryTree(BinaryTree):
         """Place element e at the root of an empty tree and return new Position.
         Raise ValueError if tree nonempty.
         """
-        if self._root is not None: raise ValueError('Root exists')
+        if self._sentinel._left is not None: raise ValueError('Root exists')
         self._size = 1
-        self._root = self._None(e)
-        return self._make_position(self._root)
+        self._sentinel._left = self._Node(e)
+        return self._make_position(self._sentinel._left)
 
     def _add_left(self, p, e):
         """Create a new left child for Position p, storing element e.
@@ -130,8 +130,8 @@ class LinkedBinaryTree(BinaryTree):
         child = node._left if node._left else node._right
         if child is not None:
             child._parent = node._parent
-        if node is self._root:
-            self._root = child
+        if node is self._sentinel._left:
+            self._sentinel._left = child
         else:
             parent = node._parent
             if node is parent._left:
@@ -150,14 +150,14 @@ class LinkedBinaryTree(BinaryTree):
             raise TypeError('Tree types must match')
         self._size += len(t1)+len(t2)
         if not t1.is_empty():
-            t1._root._parent = node
-            node._left = t1._root
-            t1._root = None
+            t1._sentinel = node
+            node._left = t1._sentinel._left
+            t1._sentinel._left = None
             t1._size = 0
         if not t2.is_empty():
-            t2._root._parent = node
-            node._right = t2._root
-            t2._root = None
+            t2._sentinel = node
+            node._right = t2._sentinel._left
+            t2._sentinel._left = None
             t2._size = 0
 
 
