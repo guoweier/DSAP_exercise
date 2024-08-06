@@ -1,4 +1,4 @@
-# Add support in LinkedBinaryTree for a method, _swap(p,q), that has the effect of restructuring the tree so that the node referenced by p takes the place of the node refereced by q, and vice versa. Make sure to properly handle the case when the nodes are adjacent.
+# We can simplify parts of our LinkedBinaryTree implementation if we make use of a single sentinel node, referenced as the _sentinel member of the tree instance, such that the sentinel is the parent of the real root of the tree, and the root is referenced as the left child of the sentinel. Furthermore, the sentinel will take the place of None as the value of the _left or _right member for a node without such a child. Give a new implementation of the update methods _delete and _attach, assuming such a representation.
 
 # -------------------------------- class LinkedBinary Tree -------------------------------------- #
 class LinkedBinaryTree(BinaryTree):
@@ -45,7 +45,7 @@ class LinkedBinaryTree(BinaryTree):
     # ---------------------- binary tree constructor -------------------------- #
     def __init__(self):
         """Create an initially empty binary tree."""
-        self._root = None
+        self._root = None 
         self._size = 0
 
     # ---------------------- public accessors -------------------------- #
@@ -55,7 +55,7 @@ class LinkedBinaryTree(BinaryTree):
 
     def root(self):
         """Return the root Position of the tree (or None if tree is empty)"""
-        return self._make_position(self._root)
+        return self._make_position(self._sentinel._left)
 
     def parent(self, p):
         """Return the Position of p's parent (or None if p is root)"""
@@ -159,40 +159,6 @@ class LinkedBinaryTree(BinaryTree):
             node._right = t2._root
             t2._root = None
             t2._size = 0
-
-    def _swap(self, p, q):
-        """restructuring the tree so that the node referenced by p takes the place of the node refereced by q, and vice versa."""
-        nodep = self._validate(p)
-        nodeq = self._validate(q)
-        if self.num_children(p)==2:
-            childp_left = nodep._left
-            childp_right = nodep._right
-        elif self.num_children(p)==1:
-            if nodep._left:
-                childp_left = nodep._left
-                childp_right = None
-            else:
-                childp_left = None
-                childp_right = nodep._right
-        elif self.num_children(p)==0:
-            childp_left = None
-            childp_right = None
-        nodep._left = nodeq._left
-        nodep._right = nodeq._right
-        nodeq._left = childp_left
-        nodeq._right = childp_right
-        if nodep is self._root:
-            parentq = nodeq._parent
-            self._root = nodeq
-            nodep._parent = parentq
-        elif nodeq is self._root:
-            parentp = nodep._parent
-            self._root = nodep
-            nodeq._parent = parentp
-        else:
-            parentp = nodep._parent
-            nodep._parent = nodeq._parent
-            nodeq._parent = parentp 
 
 
 # --------------------------------- class BinaryTree --------------------------------------- #
